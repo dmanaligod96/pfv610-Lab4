@@ -2,6 +2,7 @@ package edu.utsa.cs3443.pfv610_lab4.model;
 
 import android.app.Activity;
 import android.content.res.AssetManager;
+import android.util.Log;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -35,6 +36,10 @@ public class Trivia {
     }
 
     //TODO: Write the setters and getters for all the instance variables
+
+    public String getCorrectAnswer(){
+        return this.correctAnswer;
+    }
 
 
     /*
@@ -70,6 +75,7 @@ public class Trivia {
             String line = "";
             while(j<lineNumber){
                 line = scanner.nextLine();
+                j++;
             }
             //when this loop is over, I am standing right by the line that I want to return
 
@@ -84,20 +90,34 @@ public class Trivia {
             for (int k = 5; k< lineSplit.length; k++){
                 this.descriptionAnswer = this.descriptionAnswer + "," + lineSplit[k];
             }
-
+            identifyCorrectAnswer();
             return (this);
-        }catch(FileNotFoundException e){
-            System.err.println("File not found");
-        }catch (IOException e){
-            System.err.println("IO exception, which is a super class of FileNotFoundException");
+        } catch(FileNotFoundException e){
+            Log.d("Exception: ", "File not found");
         }
-
+        catch (IOException e){
+            //IO Exception can happen for various reasons: file not found, access permission, corrupt file
+            Log.d("Exception: ", "IO Exception");
+        }
+        //if catch happens, meaning we have an error reading or accessing the file:
+        //Program control will be going through catch, we see a print statement (Log.d)
+        //Then the program control return (this)
+        //this is pointing to the current object of Trivia, but all instance variables (such as question, options, etc.)
+        //are going to be NULL! Because we weren't successul in reading them from the file
         return (this);
     }
 
     private void identifyCorrectAnswer(){
         //takes all the options and checks if the description contains any of the options, if so, that
         //option becomes the correctAnswer
+        if(this.descriptionAnswer.contains(this.option1)){
+            this.correctAnswer = this.option1;
+        }
+        else if(this.descriptionAnswer.contains(this.option2)){
+            this.correctAnswer = this.option2;
+        }
+        else
+            this.correctAnswer = this.option3;
     }
 
 
